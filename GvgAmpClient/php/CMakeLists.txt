@@ -1,0 +1,35 @@
+file(GLOB_RECURSE MYLIB_SWIG_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.i)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(SWIG REQUIRED)
+find_package(PHP5 REQUIRED)
+
+include(UseSWIG)
+
+
+
+set(CMAKE_SWIG_FLAGS ${MYLIB_PACKAGE_NAME})
+set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/src/${MYLIB_PACKAGE_DIR})
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgconv -lstdc++")
+
+
+include_directories(
+  ${PROJECT_SOURCE_DIR}/include
+  ${PHP5_INCLUDES}
+  ${CMAKE_CURRENT_BINARY_DIR}/src
+)
+
+set_source_files_properties(${MYLIB_SWIG_FILES} PROPERTIES CPLUSPLUS ON)
+swig_add_module(GvgAmpClientPhp php ${MYLIB_SWIG_FILES})
+swig_link_libraries(GvgAmpClientPhp GvgAmpClient)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}GvgAmpClientPhp${CMAKE_SHARED_LIBRARY_SUFFIX}
+  DESTINATION php/lib
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/src/GvgAmpClient.php 
+  DESTINATION php/lib
+)
+
+
+

@@ -1,0 +1,15 @@
+This is the list of issues I found during compilation:
+
+1. Java sources are not properly listed, compilation fails.
+
+There is a file in <build_dir>/java/CMakeFiles/GvgAmpClientJava.dir called
+java_sources. This file should list the files for javac to compile the java
+class. Instead of the filenames separated by <cr>, this file contains just a
+*.java line that javac cannot use and reports an error.
+
+I modified the java/CMakeLists.txt and added a FILE(GLOB.... line and modified 
+the add_jar line around line 28. This didn't solve the problem.
+
+To compile the java before making the first cmake, uncomment line 30, after cmake failed,comment line 30 and uncomment 28, 29. This is fine unless the build directory is removed.
+
+
